@@ -4,6 +4,7 @@ import pandas as pd
 
 rng = np.random.default_rng(seed=1)
 
+# Use a log normal distribution to generate the latency values
 n = 1000
 mean_ms = 100
 sd_ms = 10
@@ -13,6 +14,7 @@ log_mu = np.log(mean_ms) - (log_sigma**2) / 2
 latency = rng.lognormal(mean=log_mu, sigma=log_sigma, size=n)
 incident = np.zeros(n, dtype=int)
 
+# Decide how many of each anomaly we want to curate
 numSpikes = 10
 numSteps = 5
 numDrifts = 5
@@ -55,11 +57,9 @@ for anomalyType in anomalyTypes:
         placed = True
         break
 
+    # If there was no place to add the anomaly print what occured
     if not placed:
         print("Could not place anomaly type: ", anomalyType)
-
-print(latency[:30])
-print(incident[:30])
 
 df = pd.DataFrame(
     {
