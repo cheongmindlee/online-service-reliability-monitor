@@ -47,3 +47,5 @@ To choose where an anomaly occurs, the generator first determines the duration o
 
 # Possible Improvements
 In the future, I may add latency for certain incidents rather than multiplying it to reflect different causes.
+
+# Detection Algorithms
