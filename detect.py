@@ -70,7 +70,7 @@ def ewma_detector(latencies: pd.Series) -> pd.DataFrame:
     ewma_value = 0
 
     for i, value in enumerate(latencies):
-        latency = np.log(values)
+        latency = np.log(value)
         z_score = (latency - log_mu) / log_sigma
 
         ewma_value = ewma_alpha * z_score + (1 - ewma_alpha) * ewma_value
