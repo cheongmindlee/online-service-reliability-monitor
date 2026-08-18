@@ -49,3 +49,7 @@ To choose where an anomaly occurs, the generator first determines the duration o
 In the future, I may add latency for certain incidents rather than multiplying it to reflect different causes.
 
 # Detection Algorithms
+
+Taking in data generated from generate.py, detect.py returns latency_anomalies.csv indicating whether requests had anomalous latencies. To detect whether an anomalous incident causes the latency, I used two statistical algorithms. CUCUSM (Cumulative Sum) and EWMA (Exponentially Weighted Moving Average). CUSUM tracks the accumulated evidence of a shift in latency and is great for detecting small persistent changes. EWMA is good at showing gradual trends while removing noise from random variance. Using both algorithms, I aim to make accurate, precise predictions about the type of incident occurring (to help find the root cause) and to recognize and alert when these incidents are occurring in the first place.
+
+In teh future I plan to add more detection algorithms, in hopes of making more robust and accurate predictions. 
