@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-
+import argparse
 
 def create_incident_ids(predictions):
     """
@@ -88,14 +88,27 @@ def ewma_detector(latencies: pd.Series) -> pd.DataFrame:
     )
 
 
+all_detectors = ["cusum", "ewma"]
 
+parser = argparse.ArgumentParser(
+    description = "Decide which detecting algorithms we should use"
+)
+
+parser.add_argument(
+    "--detectors",
+    nargs="+",
+    choices=sorted(all_detectors),
+    default=all_detectors,
+    help="decide which algorithm to use for calculations"
+)
+
+args = parser.parse_args()
+# Store which detectors we want to use.
+enabled_detectors = args.detectors
 DETECTORS = {
     "cusum": cusum_detector,
     "ewma": ewma_detector
 }
-
-# Store which detectors we want to use.
-enabled_detectors = ["cusum", "ewma"]
 
 df = pd.read_csv("data/latency_anomalies.csv")
 

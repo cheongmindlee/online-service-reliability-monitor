@@ -1,11 +1,67 @@
 import numpy as np
 import pandas as pd
+import argparse
+parser = argparse.ArgumentParser(
+    description = "Decides how much data + what kind of data"
+)
 
+def positive_int(number):
 
-rng = np.random.default_rng(seed=1)
+    number = int(number)
+
+    if(number < 0):
+        raise argparse.ArgumentTypeError(
+            "Must bea  non negative integer"
+        )
+    return number
+
+parser.add_argument(
+    "--samples",
+    type =positive_int,
+    default = 1000,
+    help = "Amount of data to generate"
+)
+
+parser.add_argument(
+    "--seed",
+    type = int,
+    default = None,
+    help = "Choose a seed for reproducible results"
+)
+
+count_arguments = [
+    ("--spikes", 10, "Number of spike incidents"),
+    ("--steps", 5, "Number of step incidents"),
+    ("--drifts", 5, "Number of drift incidents")
+]
+
+for name, default, description in count_arguments:
+    parser.add_argument(
+        name,
+        type = int,
+        default = default,
+        help = description,
+    )
+
+args = parser.parse_args()
+
+# set variables for number of samples, seed, and number of anomalies from user input
+rng = np.random.default_rng(seed = args.seed)
+n = args.samples
+
+numSpikes = args.spikes
+numSteps = args.steps
+numDrifts = args.drifts
+
+minDuration = 10
+maxDuration = 50
+
+# Place the anomalies randomly along the data
+anomalyTypes = [1] * numSpikes + [2] * numSteps + [3] * numDrifts
+rng.shuffle(anomalyTypes)
 
 # Use a log normal distribution to generate the latency values
-n = 1000
+
 mean_ms = 100
 sd_ms = 10
 
@@ -14,16 +70,7 @@ log_mu = np.log(mean_ms) - (log_sigma**2) / 2
 latency = rng.lognormal(mean=log_mu, sigma=log_sigma, size=n)
 incident = np.zeros(n, dtype=int)
 
-# Decide how many of each anomaly we want to curate
-numSpikes = 10
-numSteps = 5
-numDrifts = 5
 
-minDuration = 10
-maxDuration = 50
-
-anomalyTypes = [1] * numSpikes + [2] * numSteps + [3] * numDrifts
-rng.shuffle(anomalyTypes)
 
 for anomalyType in anomalyTypes:
     placed = False
